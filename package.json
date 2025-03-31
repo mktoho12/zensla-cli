@@ -1,0 +1,44 @@
+{
+  "name": "slack-channel-list",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "auth": "playwright codegen --save-storage=tests/fixtures/storageState.json https://slack.com",
+    "dev": "tsx src/index.ts",
+    "build": "tsc && tsc-alias",
+    "lint": "eslint . --ext .ts",
+    "lint:fix": "eslint . --ext .ts --fix",
+    "prettier": "prettier --write .",
+    "prettier:check": "prettier --check ."
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "commander": "^13.1.0",
+    "playwright": "^1.51.1"
+  },
+  "devDependencies": {
+    "@commander-js/extra-typings": "^13.1.0",
+    "@eslint/js": "^9.23.0",
+    "@playwright/test": "^1.51.1",
+    "@types/node": "^22.13.14",
+    "dotenv": "^16.4.7",
+    "eslint": "^9.23.0",
+    "jiti": "^2.4.2",
+    "prettier": "^3.5.3",
+    "tsc-alias": "^1.8.13",
+    "tsx": "^4.19.3",
+    "typescript": "^5.8.2",
+    "typescript-eslint": "^8.28.0"
+  },
+  "pnpm": {
+    "ignoredBuiltDependencies": [
+      "esbuild"
+    ],
+    "onlyBuiltDependencies": [
+      "esbuild"
+    ]
+  }
+}
