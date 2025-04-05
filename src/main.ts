@@ -28,6 +28,7 @@ export const main = async (url: string) => {
     const channels: Channel[] = []
     const maxPage = 9999
     for (let pageIndex = 0; pageIndex < maxPage; pageIndex++) {
+      await page.waitForTimeout(100)
       const channelsInPage = await collectChannelsInCurrentPage(page)
       channels.push(...channelsInPage)
 
@@ -77,12 +78,12 @@ const localePurpose = async (item: Locator): Promise<string | undefined> => {
   const purposeText = await purpose.textContent()
   return purposeText?.trim()
 }
-
-interface Channel {
+export interface Channel {
   id: string
   name: string
   memberCount: number
   purpose?: string
+  messageCount?: number
 }
 
 const collectChannelsInCurrentPage = async (page: Page): Promise<Channel[]> => {

@@ -1,5 +1,6 @@
-import { main } from '@/main'
 import { Command } from '@commander-js/extra-typings'
+import { countMessages } from './countMessages'
+import { main } from './main'
 
 const program = new Command()
 
@@ -11,14 +12,15 @@ program
     '<url>',
     'SlackワークスペースのURL（例: https://your-workspace.slack.com）',
   )
-  .action((url) => {
-    main(url)
-      .then(() => {
-        console.log('Done')
-      })
-      .catch((e) => {
-        console.error(e)
-      })
+  .action(async (url) => {
+    try {
+      await main(url)
+      await countMessages(url)
+      console.log('Done!')
+    } catch (error) {
+      console.error('Error:', error)
+      process.exit(1)
+    }
   })
 
 program.parse()
