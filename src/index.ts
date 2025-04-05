@@ -1,26 +1,65 @@
-import { Command } from '@commander-js/extra-typings'
-import { countMessages } from './countMessages'
-import { main } from './main'
+#!/usr/bin/env node
 
+import { Command } from '@commander-js/extra-typings'
+import { existsSync } from 'fs'
+import { saveStorageState } from './auth'
+import { countMessages } from './countMessages'
+import { main as fetchChannelList } from './main'
 const program = new Command()
 
 program
   .name('slack-channel-list')
   .description('Slackのチャンネルリストを取得する')
   .version('0.1.0')
+  .option('--auth', 'Slackにログインしてセッション情報を保存する')
+  .option(
+    '--storageState <path>',
+    'セッション情報の保存先または読み込み先のパス',
+    'sessions/storageState.json', // デフォルト値
+  )
   .argument(
-    '<url>',
+    '[url]',
     'SlackワークスペースのURL（例: https://your-workspace.slack.com）',
   )
-  .action(async (url) => {
-    try {
-      await main(url)
-      await countMessages(url)
-      console.log('Done!')
-    } catch (error) {
-      console.error('Error:', error)
-      process.exit(1)
-    }
-  })
+  .action(
+    (
+      url: string | undefined,
+      options: { auth?: boolean; storageState: string },
+    ) => {
+      const main = async () => {
+        if (options.auth) {
+          // 認証処理を実行
+          await saveStorageState(options.storageState)
+          console.log(`認証が完了しました: ${options.storageState}`)
+          return
+        }
+
+        if (!url) {
+          throw new Error('エラー: URLを指定してください。')
+        }
+
+        // チャンネルリスト取得処理を実行
+        const storageStatePath = options.storageState
+        if (!existsSync(storageStatePath)) {
+          throw new Error(
+            `エラー: セッション情報が保存されていません。--authオプションを使用してログインしてください。 (${storageStatePath})`,
+          )
+        }
+        // セッション情報を使用してブラウザを起動
+        await fetchChannelList(url, storageStatePath)
+        await countMessages(url, storageStatePath)
+        console.log('Done!')
+      }
+
+      main()
+        .then(() => {
+          process.exit(0)
+        })
+        .catch((error) => {
+          console.error(error)
+          process.exit(1)
+        })
+    },
+  )
 
 program.parse()

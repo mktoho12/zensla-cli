@@ -3,12 +3,12 @@ import { existsSync } from 'fs'
 import { mkdir, writeFile } from 'fs/promises'
 import { chromium, Locator, Page } from 'playwright'
 
-export const main = async (url: string) => {
+export const main = async (url: string, storageStatePath: string) => {
   const browser = await chromium.launch()
 
   try {
     const context = await browser.newContext({
-      storageState: 'tests/fixtures/storageState.json',
+      storageState: storageStatePath,
     })
 
     const page = await context.newPage()

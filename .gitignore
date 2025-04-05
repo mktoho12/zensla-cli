@@ -1,6 +1,7 @@
 node_modules/
 dist/
 out/
+sessions/storageState.json
 tests/fixtures/storageState.json
 .DS_Store
 .last-run.json

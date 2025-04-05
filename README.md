@@ -1,58 +1,62 @@
 # Slack Channel List
 
-This project is a tool for retrieving a list of channels in a Slack workspace. It uses Playwright to automate browser operations and collect channel information.
+このプロジェクトは、Slack ワークスペース内のチャンネル一覧を取得するためのツールです。Playwright を使用してブラウザ操作を自動化し、チャンネル情報を収集します。
 
-## Requirements
+## 必要要件
 
-- Node.js (22.x or higher)
+- Node.js (22.x 以上)
 - pnpm
-- Access to the Slack workspace
+- Slack ワークスペースへのアクセス
 
-## Installation
+## インストール
 
-1. Clone the repository.
+1. リポジトリをクローンします。
 
    ```bash
    git clone https://github.com/mktoho12/slack-channel-list.git
    cd slack-channel-list
    ```
 
-2. Install the required dependencies.
+2. 必要な依存関係をインストールします。
 
    ```bash
    pnpm install
    ```
 
-3. Log in to Slack  
-   Log in to Slack from your web browser and save the state information of the logged-in session to a file.  
-   This eliminates the need to log in again from the second time onward.
+## 使用方法
 
-   ```bash
-   pnpm auth
-   ```
+### 認証を実行する
 
-## Usage
-
-### Retrieve the channel list
-
-Run the script by specifying the URL of your workspace as a command-line argument.
+Slack にログインし、セッション情報を保存します。
 
 ```bash
-pnpm dev https://your-workspace.slack.com
+slack-channel-list --auth
 ```
 
-## Scripts
+セッション情報の保存先を指定する場合:
 
-- `pnpm dev`: Run the script in development mode.
-- `pnpm build`: Compile TypeScript.
-- `pnpm lint`: Validate the code using ESLint.
-- `pnpm lint:fix`: Automatically fix ESLint issues.
-- `pnpm prettier`: Format the code using Prettier.
+```bash
+slack-channel-list --auth --storageState custom/path/to/storageState.json
+```
 
-## Notes
+### チャンネルリストを取得する
 
-- Since `storageState.json` contains authentication information, handle it with care.
+ワークスペースの URL を指定してチャンネルリストを取得します。
 
-## License
+```bash
+slack-channel-list https://your-workspace.slack.com
+```
 
-This project is licensed under the [ISC License](LICENSE).
+セッション情報の保存先を指定する場合:
+
+```bash
+slack-channel-list https://your-workspace.slack.com --storageState custom/path/to/storageState.json
+```
+
+## 注意事項
+
+- セッション情報には認証情報が含まれているため、慎重に取り扱ってください。
+
+## ライセンス
+
+このプロジェクトは [ISC ライセンス](LICENSE) の下でライセンスされています。

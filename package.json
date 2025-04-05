@@ -1,10 +1,10 @@
 {
   "name": "slack-channel-list",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "A tool to retrieve Slack workspace channel lists using Playwright.",
+  "main": "dist/index.js",
   "scripts": {
-    "auth": "playwright codegen --save-storage=tests/fixtures/storageState.json https://slack.com",
+    "auth": "tsx src/auth.ts",
     "dev": "tsx src/index.ts",
     "build": "tsc && tsc-alias",
     "lint": "eslint . --ext .ts",
@@ -12,9 +12,26 @@
     "prettier": "prettier --write .",
     "prettier:check": "prettier --check ."
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "slack",
+    "channel",
+    "playwright",
+    "automation",
+    "cli"
+  ],
+  "author": "Makoto Ishida <257zs00042@student.zen.ac.jp>",
   "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mktoho12/slack-channel-list.git"
+  },
+  "bugs": {
+    "url": "https://github.com/mktoho12/slack-channel-list/issues"
+  },
+  "homepage": "https://github.com/mktoho12/slack-channel-list#readme",
+  "bin": {
+    "slack-channel-list": "dist/index.js"
+  },
   "dependencies": {
     "commander": "^13.1.0",
     "playwright": "^1.51.1"

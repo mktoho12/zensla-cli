@@ -3,12 +3,12 @@ import { mkdir, readFile, writeFile } from 'fs/promises'
 import { chromium, Page } from 'playwright'
 import { Channel } from './main'
 
-export const countMessages = async (url: string) => {
+export const countMessages = async (url: string, storageStatePath: string) => {
   const browser = await chromium.launch()
 
   try {
     const context = await browser.newContext({
-      storageState: 'tests/fixtures/storageState.json',
+      storageState: storageStatePath,
     })
 
     const channelsJSON = await readFile('out/channels.json', {

@@ -13,7 +13,8 @@
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,
-    "types": ["node"]
+    "types": ["node"],
+    "removeComments": false // コメントを削除しない（シバンを保持するため）
   },
   "ts-node": {
     "esm": true
