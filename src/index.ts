@@ -4,7 +4,7 @@ import { Command } from '@commander-js/extra-typings'
 import { existsSync } from 'fs'
 import { saveStorageState } from './auth'
 import { countMessages } from './countMessages'
-import { main as fetchChannelList } from './main'
+import { fetchChannelList } from './fetchChannelList'
 const program = new Command()
 
 program

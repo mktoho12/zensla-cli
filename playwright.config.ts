@@ -4,11 +4,11 @@ import { defineConfig } from '@playwright/test'
 export default defineConfig({
   use: {
     browserName: 'chromium',
-    headless: false,
-    viewport: { width: 1960, height: 1080 },
+    headless: true,
+    viewport: { width: 3920, height: 2160 },
     ignoreHTTPSErrors: true,
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
-    storageState: 'tests/fixtures/storageState.json',
+    storageState: 'sessions/storageState.json',
   },
 })

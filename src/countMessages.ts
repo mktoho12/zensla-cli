@@ -1,7 +1,7 @@
 import { existsSync } from 'fs'
 import { mkdir, readFile, writeFile } from 'fs/promises'
 import { chromium, Page } from 'playwright'
-import { Channel } from './main'
+import { Channel } from './fetchChannelList'
 
 export const countMessages = async (url: string, storageStatePath: string) => {
   const browser = await chromium.launch()

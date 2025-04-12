@@ -3,11 +3,17 @@ import { existsSync } from 'fs'
 import { mkdir, writeFile } from 'fs/promises'
 import { chromium, Locator, Page } from 'playwright'
 
-export const main = async (url: string, storageStatePath: string) => {
+export const fetchChannelList = async (
+  url: string,
+  storageStatePath: string,
+) => {
   const browser = await chromium.launch()
+
+  const channels: Channel[] = []
 
   try {
     const context = await browser.newContext({
+      viewport: { width: 1920, height: 3240 },
       storageState: storageStatePath,
     })
 
@@ -15,7 +21,7 @@ export const main = async (url: string, storageStatePath: string) => {
     await page.goto(url)
 
     const channelTab = page.getByRole('tab', { name: 'チャンネル' })
-    if (await channelTab.isVisible()) {
+    if (await channelTab.isEnabled()) {
       await channelTab.click()
     } else {
       await page.getByRole('tab', { name: 'その他' }).click()
@@ -25,21 +31,23 @@ export const main = async (url: string, storageStatePath: string) => {
     await page.getByRole('button', { name: '並べ替え 最もおすすめ' }).click()
     await page.getByText('チャンネル（古→新）').click()
 
-    const channels: Channel[] = []
     const maxPage = 9999
     for (let pageIndex = 0; pageIndex < maxPage; pageIndex++) {
-      await page.waitForTimeout(100)
+      await page.waitForTimeout(300)
       const channelsInPage = await collectChannelsInCurrentPage(page)
       channels.push(...channelsInPage)
 
       const nextButton = page.getByLabel('次のページ')
-      if (!(await nextButton.isVisible())) {
+      if (!(await nextButton.isVisible()) || !(await nextButton.isEnabled())) {
         break
       }
 
       await nextButton.click()
     }
-
+  } catch (error) {
+    console.error('Error occurred:', error)
+    throw error
+  } finally {
     const outputDir = 'out'
     if (!existsSync(outputDir)) {
       await mkdir(outputDir)
@@ -49,7 +57,7 @@ export const main = async (url: string, storageStatePath: string) => {
       JSON.stringify(channels, null, 2),
     )
     console.log(`📦 チャンネル取得完了（${channels.length}件）`)
-  } finally {
+
     await browser.close()
   }
 }
@@ -89,7 +97,7 @@ export interface Channel {
 const collectChannelsInCurrentPage = async (page: Page): Promise<Channel[]> => {
   const list = page.getByLabel('チャンネルの検索結果')
   const listItems = list.getByRole('listitem')
-  await listItems.nth(0).waitFor()
+  await listItems.last().waitFor()
 
   const maxScrolls = 100
   const seen: Set<string> = new Set<string>()
@@ -102,8 +110,10 @@ const collectChannelsInCurrentPage = async (page: Page): Promise<Channel[]> => {
 
     for (let i = 0; i < count; i++) {
       const el = listItems.nth(i)
-      if (i + 1 === count) {
-        await el.scrollIntoViewIfNeeded()
+      const isVisible = await el.isVisible()
+      if (!isVisible) {
+        console.debug(`Item ${i} is not visible`)
+        continue
       }
       const name = await locateName(el)
       const memberCount = await locateMemberCount(el)
@@ -120,6 +130,14 @@ const collectChannelsInCurrentPage = async (page: Page): Promise<Channel[]> => {
         seen.add(id)
       }
     }
+
+    const scrollArea = page.locator('[data-qa="slack_kit_scrollbar"]')
+    await scrollArea.hover()
+    const height = await scrollArea.evaluate(
+      (el) => el.getBoundingClientRect().height,
+    )
+    await page.mouse.wheel(0, height)
+    await page.waitForTimeout(100)
 
     if (areSetsEqual(seen, prevSeen)) {
       break
