@@ -1,6 +1,6 @@
 {
   "name": "zensla-cli",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "A CLI tool for managing Slack workspace operations using Playwright.",
   "main": "dist/index.js",
   "scripts": {
@@ -33,11 +33,11 @@
     "zensla": "dist/index.js"
   },
   "dependencies": {
+    "@commander-js/extra-typings": "^13.1.0",
     "commander": "^13.1.0",
     "playwright": "^1.51.1"
   },
   "devDependencies": {
-    "@commander-js/extra-typings": "^13.1.0",
     "@eslint/js": "^9.23.0",
     "@playwright/test": "^1.51.1",
     "@types/node": "^22.13.14",
