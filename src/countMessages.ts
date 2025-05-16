@@ -3,7 +3,15 @@ import { mkdir, readFile, writeFile } from 'fs/promises'
 import { chromium, Page } from 'playwright'
 import { Channel } from './fetchChannelList'
 
-export const countMessages = async (url: string, storageStatePath: string) => {
+interface CountMessagesOptions {
+  date?: string
+}
+
+export const countMessages = async (
+  url: string,
+  storageStatePath: string,
+  options: CountMessagesOptions = {},
+) => {
   const browser = await chromium.launch()
 
   try {
@@ -30,11 +38,16 @@ export const countMessages = async (url: string, storageStatePath: string) => {
       // 検索窓をクリック
       await page.locator('#search-text').click()
 
+      const searchInputElements = [`in:#${channel.name}`]
+      if (options.date) {
+        searchInputElements.push(`on:${options.date}`)
+      }
+
       // 検索窓にチャンネル名を入力
       // 例: 「in: #general」
       await page
         .getByRole('combobox', { name: '検索' })
-        .fill(`in: ${channel.name}`)
+        .fill(searchInputElements.join(' '))
       await page.waitForTimeout(100)
 
       // 最初の候補をクリック
@@ -47,16 +60,20 @@ export const countMessages = async (url: string, storageStatePath: string) => {
       const messageCount = await locateMessageCount(page)
 
       channel.messageCount = messageCount
-      console.log(`${channel.name}: ${messageCount.toLocaleString()} messages`)
+      if (messageCount > 0) {
+        console.log(
+          `${channel.name}: ${messageCount.toLocaleString()} messages`,
+        )
+      }
     }
 
     // JSONファイルに書き込む
-    const outputDir = 'out'
+    const outputDir = options.date ? `out/history` : 'out'
     if (!existsSync(outputDir)) {
-      await mkdir(outputDir)
+      await mkdir(outputDir, { recursive: true })
     }
     await writeFile(
-      `${outputDir}/channels.json`,
+      `${outputDir}/${options.date ? `${options.date}.json` : `channels.json`}`,
       JSON.stringify(channels, null, 2),
     )
   } finally {

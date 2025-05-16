@@ -17,6 +17,7 @@ program
     'セッション情報の保存先または読み込み先のパス',
     'sessions/storageState.json', // デフォルト値
   )
+  .option('--date <date>', 'メッセージのカウントを特定の日付に限定する')
   .argument(
     '[url]',
     'SlackワークスペースのURL（例: https://your-workspace.slack.com）',
@@ -24,7 +25,7 @@ program
   .action(
     (
       url: string | undefined,
-      options: { auth?: boolean; storageState: string },
+      options: { auth?: boolean; storageState: string; date?: string },
     ) => {
       const main = async () => {
         if (options.auth) {
@@ -46,8 +47,10 @@ program
           )
         }
         // セッション情報を使用してブラウザを起動
-        await fetchChannelList(url, storageStatePath)
-        await countMessages(url, storageStatePath)
+        if (!options.date) {
+          await fetchChannelList(url, storageStatePath)
+        }
+        await countMessages(url, storageStatePath, options)
         console.log('Done!')
       }
 

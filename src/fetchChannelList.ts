@@ -20,7 +20,10 @@ export const fetchChannelList = async (
     const page = await context.newPage()
     await page.goto(url)
 
-    const channelTab = page.getByRole('tab', { name: 'チャンネル' })
+    const channelTab = page.getByRole('tab', {
+      name: 'チャンネル',
+      exact: true,
+    })
     if (await channelTab.isEnabled()) {
       await channelTab.click()
     } else {
