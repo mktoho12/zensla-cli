@@ -1,6 +1,6 @@
-# Slack Channel List
+# zensla-cli
 
-このプロジェクトは、Slack ワークスペース内のチャンネル一覧を取得するためのツールです。Playwright を使用してブラウザ操作を自動化し、チャンネル情報を収集します。
+このプロジェクトは、Slack ワークスペースを操作するためのCLIツールです。Playwright を使用してブラウザ操作を自動化し、チャンネル情報の取得やメッセージ数のカウントなどの機能を提供します。
 
 ## 必要要件
 
@@ -13,16 +13,16 @@
 1. npm または pnpm を使用してツールをインストールします。
 
    ```bash
-   npm install -g slack-channel-list
+   npm install -g zensla-cli
    ```
 
    または
 
    ```bash
-   pnpm add -g slack-channel-list
+   pnpm add -g zensla-cli
    ```
 
-2. インストール後、`slack-channel-list` コマンドが使用可能になります。
+2. インストール後、`zensla` コマンドが使用可能になります。
 
 ## 使用方法
 
@@ -31,13 +31,13 @@
 Slack にログインし、セッション情報を保存します。
 
 ```bash
-slack-channel-list --auth
+zensla auth
 ```
 
 セッション情報の保存先を指定する場合:
 
 ```bash
-slack-channel-list --auth --storageState custom/path/to/storageState.json
+zensla auth --storageState custom/path/to/storageState.json
 ```
 
 ### チャンネルリストを取得する
@@ -45,13 +45,27 @@ slack-channel-list --auth --storageState custom/path/to/storageState.json
 ワークスペースの URL を指定してチャンネルリストを取得します。
 
 ```bash
-slack-channel-list https://your-workspace.slack.com
+zensla channels https://your-workspace.slack.com
 ```
 
 セッション情報の保存先を指定する場合:
 
 ```bash
-slack-channel-list https://your-workspace.slack.com --storageState custom/path/to/storageState.json
+zensla channels https://your-workspace.slack.com --storageState custom/path/to/storageState.json
+```
+
+### メッセージ数を取得する
+
+ワークスペースの URL を指定してチャンネルごとのメッセージ数を取得します。
+
+```bash
+zensla message-counts https://your-workspace.slack.com
+```
+
+特定の日付のメッセージ数を取得する場合:
+
+```bash
+zensla message-counts https://your-workspace.slack.com --date 2024-03-20
 ```
 
 ## 注意事項
@@ -73,8 +87,8 @@ slack-channel-list https://your-workspace.slack.com --storageState custom/path/t
 1. リポジトリをクローンします。
 
    ```bash
-   git clone https://github.com/mktoho12/slack-channel-list.git
-   cd slack-channel-list
+   git clone https://github.com/mktoho12/zensla-cli.git
+   cd zensla-cli
    ```
 
 2. 必要な依存関係をインストールします。
@@ -86,7 +100,7 @@ slack-channel-list https://your-workspace.slack.com --storageState custom/path/t
 3. 開発モードでスクリプトを実行します。
 
    ```bash
-   pnpm dev https://your-workspace.slack.com
+   pnpm dev auth
    ```
 
 ### スクリプト

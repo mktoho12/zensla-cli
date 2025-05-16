@@ -1,7 +1,7 @@
 {
-  "name": "slack-channel-list",
+  "name": "zensla-cli",
   "version": "1.0.2",
-  "description": "A tool to retrieve Slack workspace channel lists using Playwright.",
+  "description": "A CLI tool for managing Slack workspace operations using Playwright.",
   "main": "dist/index.js",
   "scripts": {
     "auth": "tsx src/auth.ts",
@@ -23,14 +23,14 @@
   "license": "ISC",
   "repository": {
     "type": "git",
-    "url": "https://github.com/mktoho12/slack-channel-list.git"
+    "url": "https://github.com/mktoho12/zensla-cli.git"
   },
   "bugs": {
-    "url": "https://github.com/mktoho12/slack-channel-list/issues"
+    "url": "https://github.com/mktoho12/zensla-cli/issues"
   },
-  "homepage": "https://github.com/mktoho12/slack-channel-list#readme",
+  "homepage": "https://github.com/mktoho12/zensla-cli#readme",
   "bin": {
-    "slack-channel-list": "dist/index.js"
+    "zensla": "dist/index.js"
   },
   "dependencies": {
     "commander": "^13.1.0",
