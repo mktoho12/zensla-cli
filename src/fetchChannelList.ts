@@ -6,6 +6,7 @@ import { chromium, Locator, Page } from 'playwright'
 export const fetchChannelList = async (
   url: string,
   storageStatePath: string,
+  outputDir: string = 'out',
 ) => {
   const browser = await chromium.launch()
 
@@ -51,7 +52,6 @@ export const fetchChannelList = async (
     console.error('Error occurred:', error)
     throw error
   } finally {
-    const outputDir = 'out'
     if (!existsSync(outputDir)) {
       await mkdir(outputDir)
     }

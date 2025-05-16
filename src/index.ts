@@ -12,9 +12,12 @@ const program = new Command()
   .version('0.1.0')
   .addOption(
     new Option(
-      '--storageState <path>',
+      '-s, --storageState <path>',
       'セッション情報の保存先または読み込み先のパス',
     ).default('sessions/storageState.json'),
+  )
+  .addOption(
+    new Option('-o, --outDir <path>', '出力先フォルダのパス').default('out'),
   )
 
 program
@@ -35,12 +38,13 @@ program
   )
   .action(async (url: string) => {
     const storageState = program.getOptionValue('storageState')
+    const outDir = program.getOptionValue('outDir')
     if (!existsSync(storageState)) {
       throw new Error(
         `エラー: セッション情報が保存されていません。auth コマンドを使用してログインしてください。 (${storageState})`,
       )
     }
-    await fetchChannelList(url, storageState)
+    await fetchChannelList(url, storageState, outDir)
     console.log('Done!')
   })
 
@@ -54,12 +58,13 @@ program
   .option('--date <date>', 'メッセージのカウントを特定の日付に限定する')
   .action(async (url: string, options: { date?: string }) => {
     const storageState = program.getOptionValue('storageState')
+    const outDir = program.getOptionValue('outDir')
     if (!existsSync(storageState)) {
       throw new Error(
         `エラー: セッション情報が保存されていません。auth コマンドを使用してログインしてください。 (${storageState})`,
       )
     }
-    await countMessages(url, storageState, options)
+    await countMessages(url, storageState, { ...options, outDir })
     console.log('Done!')
   })
 

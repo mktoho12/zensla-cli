@@ -5,6 +5,7 @@ import { Channel } from './fetchChannelList'
 
 interface CountMessagesOptions {
   date?: string
+  outDir?: string
 }
 
 export const countMessages = async (
@@ -68,7 +69,9 @@ export const countMessages = async (
     }
 
     // JSONファイルに書き込む
-    const outputDir = options.date ? `out/history` : 'out'
+    const outputDir = options.date
+      ? `${options.outDir || 'out'}/history`
+      : options.outDir || 'out'
     if (!existsSync(outputDir)) {
       await mkdir(outputDir, { recursive: true })
     }

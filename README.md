@@ -38,6 +38,8 @@ zensla auth
 
 ```bash
 zensla auth --storageState custom/path/to/storageState.json
+# または短縮形を使用
+zensla auth -s custom/path/to/storageState.json
 ```
 
 ### チャンネルリストを取得する
@@ -52,6 +54,22 @@ zensla channels https://your-workspace.slack.com
 
 ```bash
 zensla channels https://your-workspace.slack.com --storageState custom/path/to/storageState.json
+# または短縮形を使用
+zensla channels https://your-workspace.slack.com -s custom/path/to/storageState.json
+```
+
+出力先フォルダを指定する場合:
+
+```bash
+zensla channels https://your-workspace.slack.com --outDir custom/path/to/output
+# または短縮形を使用
+zensla channels https://your-workspace.slack.com -o custom/path/to/output
+```
+
+両方のオプションを組み合わせることもできます:
+
+```bash
+zensla channels https://your-workspace.slack.com -s custom/path/to/storageState.json -o custom/path/to/output
 ```
 
 ### メッセージ数を取得する
@@ -68,9 +86,30 @@ zensla message-counts https://your-workspace.slack.com
 zensla message-counts https://your-workspace.slack.com --date 2024-03-20
 ```
 
+出力先フォルダを指定する場合:
+
+```bash
+zensla message-counts https://your-workspace.slack.com --outDir custom/path/to/output
+# または短縮形を使用
+zensla message-counts https://your-workspace.slack.com -o custom/path/to/output
+```
+
+特定の日付のメッセージ数を取得し、出力先フォルダも指定する場合:
+
+```bash
+zensla message-counts https://your-workspace.slack.com --date 2024-03-20 --outDir custom/path/to/output
+# または短縮形を使用
+zensla message-counts https://your-workspace.slack.com --date 2024-03-20 -o custom/path/to/output
+```
+
+注: 日付を指定した場合、出力ファイルは `<outDir>/history/<date>.json` に保存されます。
+
 ## 注意事項
 
 - セッション情報には認証情報が含まれているため、慎重に取り扱ってください。
+- 出力先フォルダを指定しない場合、デフォルトで `out` ディレクトリに出力されます。
+- 出力先フォルダは `--outDir` または `-o` で指定できます。
+- セッション情報の保存先は `--storageState` または `-s` で指定できます。
 
 ---
 
