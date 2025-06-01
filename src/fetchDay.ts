@@ -78,8 +78,12 @@ export const fetchDay = async (
     if (!existsSync(outputDir)) {
       await mkdir(outputDir)
     }
+    const messagesDir = `${outputDir}/messages`;
+    if (!existsSync(messagesDir)) {
+      await mkdir(messagesDir, { recursive: true });
+    }
     await writeFile(
-      `${outputDir}/messages/${date}.json`,
+      `${messagesDir}/${date}.json`,
       JSON.stringify(messages, null, 2),
     )
     console.log(`📦 メッセージ取得完了（${messages.length}件）`)
