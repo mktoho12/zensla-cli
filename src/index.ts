@@ -5,6 +5,7 @@ import { existsSync } from 'fs'
 import { saveStorageState } from './auth'
 import { countMessages } from './countMessages'
 import { fetchChannelList } from './fetchChannelList'
+import { fetchDay } from './fetchDay'
 
 const program = new Command()
   .name('zensla')
@@ -65,6 +66,26 @@ program
       )
     }
     await countMessages(url, storageState, { ...options, outDir })
+    console.log('Done!')
+  })
+
+program
+  .command('daily-message-counts')
+  .description('各チャンネルのメッセージ数を取得する')
+  .argument(
+    '<url>',
+    'SlackワークスペースのURL（例: https://your-workspace.slack.com）',
+  )
+  .argument('<date>', '日付')
+  .action(async (url: string, date: string) => {
+    const storageState = program.getOptionValue('storageState')
+    const outDir = program.getOptionValue('outDir')
+    if (!existsSync(storageState)) {
+      throw new Error(
+        `エラー: セッション情報が保存されていません。auth コマンドを使用してログインしてください。 (${storageState})`,
+      )
+    }
+    await fetchDay(url, date, storageState, outDir)
     console.log('Done!')
   })
 
