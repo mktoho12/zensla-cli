@@ -23,7 +23,7 @@ export const saveStorageState = async (
     'ログインが完了したら、このターミナルに戻って Enter を押してください。',
   )
 
-  await page.goto('https://slack.com')
+  await page.goto('https://slack.com', { timeout: 120000 })
   await new Promise((resolve) => {
     process.stdin.once('data', resolve)
   })

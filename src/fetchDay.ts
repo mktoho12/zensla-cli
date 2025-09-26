@@ -22,7 +22,7 @@ export const fetchDay = async (
 
   try {
     const context = await browser.newContext({
-      viewport: { width: 1920, height: 3240 },
+      viewport: { width: 1920, height: 1080 },
       storageState: storageStatePath,
     })
 
@@ -30,11 +30,11 @@ export const fetchDay = async (
     await page.goto(url)
 
     // 検索窓をクリック
-    await page.locator('#search-text').click()
+    await page.locator('.p-top_nav__search__container').click()
 
     await page
-      .getByRole('combobox', { name: '検索' })
-      .fill(`on:${date} -is:dm -in:#１年_13クラス`)
+      .getByRole('combobox', { name: 'クエリ' })
+      .fill(`on:${date} -is:dm`)
     await page.locator('#c-search_autcomplete__suggestion_0').click()
 
     // await page.goto('https://app.slack.com/client/T085SRUUM8W/search')
@@ -70,7 +70,7 @@ export const fetchDay = async (
         const message = await readMessage(messageLocator)
         messages.push(message)
       }
-    } while (await hasNextPageButton(page))
+    } while ((await hasNextPageButton(page)) && messages.length < 2000)
   } catch (error) {
     console.error('Error occurred:', error)
     throw error
@@ -78,9 +78,9 @@ export const fetchDay = async (
     if (!existsSync(outputDir)) {
       await mkdir(outputDir)
     }
-    const messagesDir = `${outputDir}/messages`;
+    const messagesDir = `${outputDir}/messages`
     if (!existsSync(messagesDir)) {
-      await mkdir(messagesDir, { recursive: true });
+      await mkdir(messagesDir, { recursive: true })
     }
     await writeFile(
       `${messagesDir}/${date}.json`,
@@ -111,6 +111,7 @@ const readMessage = async (messageLocator: Locator): Promise<Message> => {
 
   const timestamp = await messageLocator
     .locator('[data-ts]')
+    .first()
     .getAttribute('data-ts')
 
   // const message = await messageLocator
