@@ -21,16 +21,8 @@ export const fetchChannelList = async (
     const page = await context.newPage()
     await page.goto(url)
 
-    const channelTab = page.getByRole('tab', {
-      name: 'チャンネル',
-      exact: true,
-    })
-    if (await channelTab.isEnabled()) {
-      await channelTab.click()
-    } else {
-      await page.getByRole('tab', { name: 'その他' }).click()
-      await page.getByRole('menuitemradio', { name: 'チャンネル' }).click()
-    }
+    await page.getByRole('treeitem', { name: 'ディレクトリ' }).click()
+    await page.getByRole('tab', { name: 'チャンネル' }).click()
 
     await page.getByRole('button', { name: '並べ替え 最もおすすめ' }).click()
     await page.getByText('チャンネル（古→新）').click()
@@ -134,8 +126,13 @@ const collectChannelsInCurrentPage = async (page: Page): Promise<Channel[]> => {
       }
     }
 
-    const scrollArea = page.locator('[data-qa="slack_kit_scrollbar"]')
-    await scrollArea.hover()
+    const scrollAreas = await page
+      .locator('[data-qa="slack_kit_scrollbar"]')
+      .all()
+    const scrollArea = scrollAreas.at(1)
+
+    if (!scrollArea) return channels
+
     const height = await scrollArea.evaluate(
       (el) => el.getBoundingClientRect().height,
     )
